@@ -19,9 +19,14 @@ export default function App() {
       />
       </>)
       : (
-      <Timer focusSubject={currentSubject}
-       onTimerEnd={() => {setFocusHistory}}
-       clearSubject={() => setCurrentSubject(null)}/>
+        <Timer
+  focusSubject={currentSubject}
+  onTimerEnd={(subject) => {
+    setFocusHistory([...focusHistory, subject]); // Corrected this line
+  }}
+  clearSubject={() => setCurrentSubject(null)}
+/>
+
       )}
     </SafeAreaView>
   );

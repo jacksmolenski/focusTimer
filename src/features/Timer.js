@@ -18,20 +18,36 @@ const ONE_SECOND_IN_MS = 1000;
     1 * ONE_SECOND_IN_MS,
   ];
 
-export const Timer = ({focusSubject, clearSubject, }) => {
+  export const Timer = ({ focusSubject, clearSubject, onTimerEnd }) => {
+    useKeepAwake();
     const [progress, setProgress] = useState(1);
     const [isStarted, setIsStarted] = useState(false);
-    const [minutes, setMinutes] = useState(0.2);
+    const [minutes, setMinutes] = useState(0.1);
+  
+    const onEnd = (reset) => {
+      Vibration.vibrate(PATTERN);
+      setIsStarted(false);
+      setProgress(1);
+      reset();
+      onTimerEnd(focusSubject);
+    };
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.countdown}>
-            <Countdown
+          <Countdown
             minutes={minutes}
-            isPaused={isStarted} 
-            onProgress={setProgress} 
-            onEnd={() => {Vibration.vibrate(PATTERN)}}/>
+            isPaused={!isStarted}
+            onProgress={setProgress}
+            onEnd={onEnd}
+          />
         </View>
-            <ProgressBar style={styles.progress} progress={progress} color={colors.sienaGreen} />
+        <Text style={styles.title}>Focus Feature: </Text>
+        <Text style={styles.task}>{focusSubject}</Text>
+        <ProgressBar
+          style={styles.progress}
+          progress={progress}
+          color={colors.sienaGreen}
+        />
             <View style={styles.timingWrapper}>
               <Timing onChangeTime={setMinutes} />
             </View>
